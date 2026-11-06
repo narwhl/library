@@ -2,7 +2,7 @@
 
 ## Layout
 
-- Each domain is one module in `go/<name>/`, with its own `go.mod`. The module path is `packages.narwhl.dev/go/<name>`.
+- Each domain is one module in `go/<name>/`, with its own `go.mod`. The module path is `pkg.narwhl.dev/<name>`. The `go/` directory is not part of it: `go/authn/` holds the module `pkg.narwhl.dev/authn`.
 - There is no module that spans several domains, and no `common` or `util` module. Code goes in the module of the domain it serves.
 - Module names are short lowercase domain names, for example `authn` (authentication) and `authz` (authorization).
 - The module root holds no Go code. Packages live in `go/<name>/<package>/` and commands in `go/<name>/cmd/<command>/`. A package at the root would be named after the domain, and would clash with the applications' own packages of the same name.

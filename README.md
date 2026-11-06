@@ -13,7 +13,7 @@ library/
 ├── go/
 │   ├── go.work            lists every Go module, for local development
 │   └── <name>/            one Go module per domain, for example authn
-│       ├── go.mod         module packages.narwhl.dev/go/<name>
+│       ├── go.mod         module pkg.narwhl.dev/<name>
 │       ├── <package>/     importable packages
 │       └── cmd/<command>/ command-line tools
 ├── CONTRIBUTING.md
@@ -25,10 +25,10 @@ library/
 Each module is versioned and released on its own. Add one to an application with:
 
 ```sh
-go get packages.narwhl.dev/go/<name>@latest
+go get pkg.narwhl.dev/<name>@latest
 ```
 
-and import its packages by their full path, for example `packages.narwhl.dev/go/authn/oidclogin`.
+and import its packages by their full path, for example `pkg.narwhl.dev/authn/oidclogin`.
 
 ## Documents
 

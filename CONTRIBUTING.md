@@ -47,5 +47,5 @@ Each module is versioned on its own, with [semantic versioning](https://semver.o
 - A version is a git tag `go/<name>/vX.Y.Z`, for example `go/authn/v0.3.0`, on a commit in `main`.
 - A tag is never moved or deleted once pushed. A bad release is fixed by releasing the next version.
 - Before `v1.0.0`, a minor version may change the API. Its release notes say how to update.
-- From `v2`, the module path ends in the major version, `packages.narwhl.dev/go/<name>/v2`. The `go.mod` stays in `go/<name>/`; there is no `v2` directory.
-- A release workflow publishes each tag to `packages.narwhl.dev`. It is added to this repository together with the first module.
+- From `v2`, the module path ends in the major version, `pkg.narwhl.dev/<name>/v2`. The `go.mod` stays in `go/<name>/`; there is no `v2` directory.
+- A release workflow publishes each tag to `pkg.narwhl.dev`. It is added to this repository together with the first module.
