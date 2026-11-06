@@ -1,0 +1,7 @@
+# Operating systems and editors
+.DS_Store
+*.swp
+
+# Go test binaries and coverage profiles
+*.test
+*.out
