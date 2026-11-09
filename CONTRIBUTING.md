@@ -14,11 +14,12 @@
   ```sh
   cd go/<name>
   gofmt -l .
+  go mod tidy -diff
   go vet ./...
   go test ./...
   ```
 
-  `gofmt -l` prints nothing when the code is formatted.
+  `gofmt -l` prints nothing when the code is formatted, and `go mod tidy -diff` prints nothing when `go.mod` and `go.sum` are tidy. CI runs the same checks on each module, outside the workspace, with the oldest Go release the module supports and with the latest.
 - Give every exported identifier a doc comment that states its contract: what it does, what it requires, and how it fails.
 - Add tests for new behaviour. Tests do not reach the network; use fakes or `net/http/httptest`.
 - If the change alters a public API, say so in the description and say how a consumer updates.

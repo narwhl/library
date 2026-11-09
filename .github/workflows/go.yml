@@ -1,0 +1,88 @@
+name: Go
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "go/**"
+      - ".github/workflows/go.yml"
+  pull_request:
+    paths:
+      - "go/**"
+      - ".github/workflows/go.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  modules:
+    name: List modules
+    runs-on: ubuntu-latest
+    outputs:
+      modules: ${{ steps.list.outputs.modules }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: stable
+          cache: false
+      - id: list
+        name: Check that go.work lists every module
+        working-directory: go
+        run: |
+          listed=$(go work edit -json | jq -r '.Use[].DiskPath | ltrimstr("./")' | sort)
+          found=$(find . -name go.mod -not -path '*/testdata/*' | sed -e 's|^\./||' -e 's|/go\.mod$||' | sort)
+          if [ "$listed" != "$found" ]; then
+            echo "::error file=go/go.work::go.work must list every module under go/"
+            diff <(echo "$listed") <(echo "$found") || true
+            exit 1
+          fi
+          echo "modules=$(echo "$listed" | jq -R . | jq -cs .)" >> "$GITHUB_OUTPUT"
+
+  check:
+    name: ${{ matrix.module }} (Go ${{ matrix.go }})
+    needs: modules
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        module: ${{ fromJson(needs.modules.outputs.modules) }}
+        # oldest is the release named by the module's go line; stable is the
+        # latest release.
+        go: [oldest, stable]
+    env:
+      # Check each module on its own, as an application gets it. In the
+      # workspace, another module could supply a requirement this one lacks.
+      GOWORK: "off"
+      # Fail instead of downloading the newer Go a dependency asks for, so the
+      # oldest job runs on the oldest release.
+      GOTOOLCHAIN: local
+    defaults:
+      run:
+        working-directory: go/${{ matrix.module }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: ${{ matrix.go == 'stable' && 'stable' || '' }}
+          go-version-file: ${{ matrix.go == 'oldest' && format('go/{0}/go.mod', matrix.module) || '' }}
+          cache-dependency-path: go/${{ matrix.module }}/go.sum
+      - name: gofmt
+        run: |
+          unformatted=$(gofmt -l .)
+          if [ -n "$unformatted" ]; then
+            echo "::error::gofmt -l lists files that are not formatted:"
+            echo "$unformatted"
+            exit 1
+          fi
+      - name: go mod tidy
+        run: go mod tidy -diff
+      - name: go vet
+        run: go vet ./...
+      - name: go test
+        run: go test ./...
