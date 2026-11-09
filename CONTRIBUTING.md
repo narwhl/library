@@ -6,11 +6,6 @@
 - Code that knows nothing about any one application: no application names, database schemas, configuration keys or HTTP routes.
 - Code whose API is settled enough to share. Prototypes stay on branches until the applications that will use them have tried them.
 
-## Proposing a change
-
-- **A new module or package.** Open an issue first. Name the applications that will use it, sketch the API, and list the dependencies it adds. Agree on the API before writing the code.
-- **A fix or a small change.** Open a pull request.
-
 ## Pull requests
 
 - Keep one change per pull request, in one module where possible.

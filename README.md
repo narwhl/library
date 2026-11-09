@@ -32,5 +32,5 @@ and import its packages by their full path, for example `pkg.narwhl.dev/authn/oi
 
 ## Documents
 
-- [CONTRIBUTING.md](CONTRIBUTING.md): what belongs here, how to propose a change, and how versions are released.
+- [CONTRIBUTING.md](CONTRIBUTING.md): what belongs here, what a pull request needs, and how versions are released.
 - [go/README.md](go/README.md): the layout and design rules for Go modules.
